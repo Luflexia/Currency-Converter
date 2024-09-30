@@ -64,7 +64,22 @@
 - Кнопку для добавления новых валют через окно с чекбоксами.
 - Возможность удаления валют свайпом и изменения порядка валют через перетаскивание блоков.
 
+Главный экран выглядит так.
+
+![image](https://github.com/user-attachments/assets/08d1c6a8-43a1-4142-a00a-526510dbae08)
+
 Экран выбора банка содержит список банков с указанием актуального курса валюты для каждого банка.
+
+![image](https://github.com/user-attachments/assets/90a8eea6-d53d-4bd5-bb67-32c5b6eaab8a)
+
+Экран выбора валюты позволяет отметить какие валюты будут отображаться на главном экране.
+
+![image](https://github.com/user-attachments/assets/0a2e4e9a-e709-4bec-8894-437bf1b7c090)
+
+Экран авторизации выглядит так.
+
+![image](https://github.com/user-attachments/assets/e2fd966f-0462-49a0-999f-23b705f843ab)
+
 
 <a name="user_specifications"/>
 
