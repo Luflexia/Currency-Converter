@@ -78,7 +78,7 @@
 
 Экран авторизации выглядит так.
 
-![image](docs/mockups/authorization.png)
+![Изображение](docs/mockups/authorization.png)
 
 <a name="user_specifications"/>
 
