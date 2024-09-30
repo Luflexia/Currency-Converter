@@ -78,7 +78,7 @@
 
 Экран авторизации выглядит так.
 
-<img src="https://github.com/user-attachments/assets/e2fd966f-0462-49a0-999f-23b705f843ab" alt="" width="350"/>
+![image](docs/mockups/authorization.png)
 
 <a name="user_specifications"/>
 
