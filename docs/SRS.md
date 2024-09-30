@@ -78,7 +78,8 @@
 
 Экран авторизации выглядит так.
 
-![image](https://github.com/user-attachments/assets/e2fd966f-0462-49a0-999f-23b705f843ab)
+<img src="https://github.com/user-attachments/assets/e2fd966f-0462-49a0-999f-23b705f843ab" alt="" width="500"/>
+![image]()
 
 
 <a name="user_specifications"/>
