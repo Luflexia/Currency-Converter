@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/backgroundColor">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/selectBankButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Выбрать банк"
+        style="@style/Widget.MaterialComponents.Button"
+        app:cornerRadius="12dp"
+        android:textColor="@color/white"
+        android:backgroundTint="?attr/colorPrimary" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/currencyRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addCurrencyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Добавить валюту"
+        style="@style/Widget.MaterialComponents.Button"
+        app:cornerRadius="12dp"
+        android:textColor="@color/white"
+        android:backgroundTint="?attr/colorPrimary" />
+</LinearLayout>

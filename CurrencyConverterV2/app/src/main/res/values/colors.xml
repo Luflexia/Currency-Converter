@@ -1,0 +1,15 @@
+<resources>
+    <color name="colorPrimary">#000000</color> <!-- чёрный цвет для кнопок -->
+    <color name="backgroundColor">#FFFFFF</color> <!-- белый фон -->
+    <color name="textPrimaryColor">#000000</color> <!-- чёрный цвет текста -->
+    <color name="white">#FFFFFF</color> <!-- белый цвет -->
+    <color name="textInputBackgroundColor">#F5F5F5</color> <!-- светло-серый фон для полей ввода -->
+    <color name="buttonTextColor">#FFFFFF</color> <!-- белый цвет текста на кнопках -->
+    <color name="borderColor">#000000</color> <!-- чёрный цвет для обрамления -->
+    <color name="purple_200">#000000</color>
+    <color name="purple_500">#000000</color>
+    <color name="purple_700">#000000</color>
+    <color name="teal_200">#000000</color>
+    <color name="teal_700">#000000</color>
+    <color name="black">#000000</color>
+</resources>
