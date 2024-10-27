@@ -14,6 +14,6 @@
 
 ![Регистрация](images/registration_sequence_diagram.png)
   
-### 3. Создание задачи<a name="3"></a>
+### 3. Конвертация валют<a name="3"></a>
 
 ![Конвертация валют](images/currency_conversion_sequence_diagram.png)
