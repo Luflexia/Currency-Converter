@@ -1,14 +1,13 @@
 package com.example.currencyconverterv2.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currencyconverterv2.adapters.BankAdapter
 import com.example.currencyconverterv2.databinding.ActivityBankSelectionBinding
 import com.example.currencyconverterv2.models.Bank
 
-class BankSelectionActivity : AppCompatActivity() {
+class BankSelectionActivity : BaseActivity() {
 
     private lateinit var binding: ActivityBankSelectionBinding
     private lateinit var bankAdapter: BankAdapter
@@ -21,7 +20,6 @@ class BankSelectionActivity : AppCompatActivity() {
         binding = ActivityBankSelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Предположим, что у вас есть какой-то список банков
         banks.add(Bank("National Bank", "NBRB"))
         banks.add(Bank("Bank ABC", "ABC"))
         banks.add(Bank("Bank XYZ", "XYZ"))

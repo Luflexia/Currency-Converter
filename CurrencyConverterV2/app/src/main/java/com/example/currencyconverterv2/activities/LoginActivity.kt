@@ -1,17 +1,15 @@
 package com.example.currencyconverterv2.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.currencyconverterv2.R
 import com.example.currencyconverterv2.databinding.ActivityLoginBinding
 import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var usersJson: JSONObject

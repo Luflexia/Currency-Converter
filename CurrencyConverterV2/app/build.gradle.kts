@@ -47,18 +47,16 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.androidx.core.ktx)
     implementation (libs.androidx.appcompat.v151)
-    implementation (libs.material.v170)
     implementation (libs.androidx.recyclerview)
     implementation (libs.kotlinx.coroutines.android)
     implementation(libs.okhttp)
     implementation (libs.okhttp.v491)
     implementation (libs.gson)
-    implementation (libs.material)
-
+    implementation (libs.androidx.appcompat.v161)
+    implementation(libs.material.v190)
 }

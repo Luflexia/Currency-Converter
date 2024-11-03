@@ -1,91 +1,89 @@
 package com.example.currencyconverterv2.activities
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyconverterv2.adapters.CurrencyAdapter
 import com.example.currencyconverterv2.databinding.ActivityMainBinding
 import com.example.currencyconverterv2.models.Currency
 import com.example.currencyconverterv2.utils.ApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.currencyconverterv2.R
+import com.example.currencyconverterv2.utils.CurrencyGestureHelper
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var currencyAdapter: CurrencyAdapter
     private var currencies: MutableList<Currency> = mutableListOf()
-    private var selectedCurrencies: MutableList<Currency> = mutableListOf()
+    private var selectedCurrencies: MutableList<Currency> = mutableListOf() // Список выбранных валют
     private val apiService = ApiService()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        // View Binding initialization
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    // View Binding initialization
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
-        // RecyclerView setup
-        currencyAdapter = CurrencyAdapter(currencies)
-
-        binding.currencyRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.currencyRecyclerView.adapter = currencyAdapter
-
-        // Подключение ItemTouchHelper для обработки перемещения и удаления
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(binding.currencyRecyclerView)
-
-        // Load exchange rates
-        loadExchangeRates()
-
-        // Setup "Add Currency" button
-        binding.addCurrencyButton.setOnClickListener {
-            showCurrencySelectionDialog()
-        }
+    // Проверяем, является ли устройство планшетом
+    if (resources.getBoolean(R.bool.is_tablet)) {
+        // Если это планшет, разрешаем поворот экрана
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+    } else {
+        // Если это телефон, фиксируем ориентацию в портретном режиме
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    private val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
-        ItemTouchHelper.UP or ItemTouchHelper.DOWN, // Для перемещения
-        ItemTouchHelper.LEFT // Для удаления
-    ) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            val fromPosition = viewHolder.adapterPosition
-            val toPosition = target.adapterPosition
-            currencyAdapter.moveCurrency(fromPosition, toPosition) // Перемещение валюты
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val position = viewHolder.adapterPosition
-            currencyAdapter.removeCurrency(position) // Удаление валюты
-        }
+    // RecyclerView setup
+    currencyAdapter = CurrencyAdapter(selectedCurrencies) { currencyName, inputAmount ->
+        updateCurrencies(currencyName, inputAmount)
     }
+
+    binding.currencyRecyclerView.layoutManager = LinearLayoutManager(this)
+    binding.currencyRecyclerView.adapter = currencyAdapter
+
+    // Использование CurrencyGestureHelper для жестов
+    val gestureHelper = CurrencyGestureHelper(currencyAdapter)
+    val itemTouchHelper = ItemTouchHelper(gestureHelper)
+    itemTouchHelper.attachToRecyclerView(binding.currencyRecyclerView)
+
+    // Load exchange rates
+    loadExchangeRates()
+
+    // Setup "Add Currency" button
+    binding.addCurrencyButton.setOnClickListener {
+        showCurrencySelectionDialog()
+    }
+}
 
     private fun loadExchangeRates() {
         CoroutineScope(Dispatchers.IO).launch {
-            val exchangeRates = apiService.getExchangeRatesFromBelarusbank()
-            if (exchangeRates != null) {
-                currencies.clear()
-                for (rate in exchangeRates) {
-                    val currency = Currency(
-                        rate.curAbbreviation,
-                        rate.rate
-                    )
-                    currencies.add(currency)
-                }
-                runOnUiThread {
-                    currencyAdapter.notifyDataSetChanged()
+            val exchangeRates = apiService.getExchangeRatesFromBelarusbank() // Всегда возвращает список
+            currencies.clear()
+
+            // Добавляем валюты и автоматически активируем USD, EUR, BYN, RUB
+            for (rate in exchangeRates) {
+                val currency = Currency(rate.curAbbreviation, rate.rate)
+                currencies.add(currency)
+
+                // Добавляем USD, EUR, BYN, RUB в список выбранных валют по умолчанию
+                if (currency.name in listOf("USD", "EUR", "BYN", "RUB")) {
+                    selectedCurrencies.add(currency)
                 }
             }
+            runOnUiThread {
+                currencyAdapter.notifyDataSetChanged() // Обновляем адаптер после загрузки данных
+            }
         }
+    }
+
+    private fun updateCurrencies(inputCurrency: String, inputAmount: Double) {
+        currencyAdapter.updateCurrencies(inputCurrency, inputAmount)
     }
 
     private fun showCurrencySelectionDialog() {
@@ -107,7 +105,10 @@ class MainActivity : AppCompatActivity() {
                     removeCurrency(currency)
                 }
             }
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton("OK") { dialog, _ ->
+                currencyAdapter.notifyDataSetChanged() // Обновляем список после выбора
+                dialog.dismiss()
+            }
             .show()
     }
 
@@ -121,21 +122,5 @@ class MainActivity : AppCompatActivity() {
     private fun removeCurrency(currency: Currency) {
         selectedCurrencies.remove(currency)
         updateCurrencies(currency.name, 0.0)
-    }
-
-    private fun updateCurrencies(inputCurrency: String, inputAmount: Double) {
-        val inputRate = currencies.find { it.name == inputCurrency }?.rate ?: return
-
-        for (currency in currencies) {
-            if (currency.name != inputCurrency) {
-                val convertedAmount = inputAmount / inputRate * currency.rate
-                currency.convertedValue = convertedAmount
-            } else {
-                currency.convertedValue = inputAmount
-            }
-        }
-        runOnUiThread {
-            currencyAdapter.notifyDataSetChanged()
-        }
     }
 }

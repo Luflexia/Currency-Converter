@@ -1,16 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.CurrencyConverterV2" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.CurrencyConverterV2" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">#7A5E47</item>
+        <item name="colorPrimaryVariant">#493628</item>
+        <item name="colorOnPrimary">#E4E0E1</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">#AB886D</item>
+        <item name="colorSecondaryVariant">#7A5E47</item>
+        <item name="colorOnSecondary">#E4E0E1</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Background color. -->
+        <item name="android:windowBackground">#2C2116</item>
+        <!-- Text colors -->
+        <item name="android:textColor">#E4E0E1</item>
+        <item name="android:textColorHint">#AB886D</item>
+        <!-- Input field colors -->
+        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+        <item name="boxStrokeColor">#AB886D</item>
+        <item name="boxBackgroundColor">#3D2E21</item>
+        <!-- Button colors -->
+        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
+        <item name="buttonStyle">@style/Widget.MaterialComponents.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.MaterialComponents.Button.OutlinedButton</item>
     </style>
 </resources>

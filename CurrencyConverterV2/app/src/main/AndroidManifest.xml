@@ -18,7 +18,7 @@
         <!-- Стартовая Activity -->
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="true"> <!-- Установлено в true -->
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,12 +28,12 @@
         <!-- Другие Activity -->
         <activity
             android:name=".activities.MainActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="false" />
 
         <activity
             android:name=".activities.BankSelectionActivity"
             android:exported="false" />
     </application>
-
 
 </manifest>

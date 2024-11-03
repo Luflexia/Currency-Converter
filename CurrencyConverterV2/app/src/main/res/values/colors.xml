@@ -1,15 +1,56 @@
 <resources>
-    <color name="colorPrimary">#000000</color> <!-- чёрный цвет для кнопок -->
-    <color name="backgroundColor">#FFFFFF</color> <!-- белый фон -->
-    <color name="textPrimaryColor">#000000</color> <!-- чёрный цвет текста -->
-    <color name="white">#FFFFFF</color> <!-- белый цвет -->
-    <color name="textInputBackgroundColor">#F5F5F5</color> <!-- светло-серый фон для полей ввода -->
-    <color name="buttonTextColor">#FFFFFF</color> <!-- белый цвет текста на кнопках -->
-    <color name="borderColor">#000000</color> <!-- чёрный цвет для обрамления -->
-    <color name="purple_200">#000000</color>
-    <color name="purple_500">#000000</color>
-    <color name="purple_700">#000000</color>
-    <color name="teal_200">#000000</color>
-    <color name="teal_700">#000000</color>
+    <!-- Base colors -->
+    <color name="primary_color">#AB886D</color>
+    <color name="primary_variant">#8C6D55</color>
+    <color name="secondary_color">#D6C0B3</color>
+    <color name="background_color">#F2EAE4</color>
+    <color name="surface_color">#FFFFFF</color>
+    <color name="accent_color">#493628</color>
+    <color name="text_primary_color">#493628</color>
+    <color name="text_secondary_color">#78624E</color>
+
+    <!-- App icon background color -->
+    <color name="ic_launcher_background">#E4E0E1</color>
+
+    <!-- Material Design 3 theme colors -->
+    <color name="md_theme_primary">@color/primary_color</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_primaryContainer">@color/secondary_color</color>
+    <color name="md_theme_onPrimaryContainer">@color/accent_color</color>
+    <color name="md_theme_secondary">@color/secondary_color</color>
+    <color name="md_theme_onSecondary">@color/accent_color</color>
+    <color name="md_theme_secondaryContainer">#E8D6CC</color>
+    <color name="md_theme_onSecondaryContainer">@color/accent_color</color>
+    <color name="md_theme_tertiary">#78624E</color>
+    <color name="md_theme_onTertiary">#FFFFFF</color>
+    <color name="md_theme_tertiaryContainer">#FFDCC1</color>
+    <color name="md_theme_onTertiaryContainer">#2B1700</color>
+    <color name="md_theme_error">#BA1A1A</color>
+    <color name="md_theme_errorContainer">#FFDAD6</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_onErrorContainer">#410002</color>
+    <color name="md_theme_background">@color/background_color</color>
+    <color name="md_theme_onBackground">@color/text_primary_color</color>
+    <color name="md_theme_surface">@color/surface_color</color>
+    <color name="md_theme_onSurface">@color/text_primary_color</color>
+    <color name="md_theme_surfaceVariant">#E8D6CC</color>
+    <color name="md_theme_onSurfaceVariant">@color/text_secondary_color</color>
+    <color name="md_theme_outline">#8C7A6B</color>
+    <color name="md_theme_inverseOnSurface">#F6EFE8</color>
+    <color name="md_theme_inverseSurface">#362F2B</color>
+    <color name="md_theme_inversePrimary">#FFB787</color>
+    <color name="md_theme_shadow">#000000</color>
+    <color name="md_theme_surfaceTint">#AB886D</color>
+    <color name="md_theme_outlineVariant">#D0C3B8</color>
+    <color name="md_theme_scrim">#000000</color>
+
+    <!-- Legacy colors (можно удалить, если они больше не используются) -->
+    <color name="colorPrimary">@color/primary_color</color>
+    <color name="backgroundColor">@color/background_color</color>
+    <color name="textPrimaryColor">@color/text_primary_color</color>
+    <color name="white">#FFFFFF</color>
+    <color name="textInputBackgroundColor">#F5F5F5</color>
+    <color name="buttonTextColor">#FFFFFF</color>
+    <color name="borderColor">@color/accent_color</color>
     <color name="black">#000000</color>
 </resources>

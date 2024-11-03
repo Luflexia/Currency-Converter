@@ -20,14 +20,19 @@ class CurrencyGestureHelper(private val adapter: CurrencyAdapter) : ItemTouchHel
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        val fromPosition = viewHolder.adapterPosition
-        val toPosition = target.adapterPosition
-        adapter.moveCurrency(fromPosition, toPosition) // Перемещение валют
-        return true
+        val fromPosition = viewHolder.bindingAdapterPosition
+        val toPosition = target.bindingAdapterPosition
+        if (fromPosition != RecyclerView.NO_POSITION && toPosition != RecyclerView.NO_POSITION) {
+            adapter.moveCurrency(fromPosition, toPosition) // Перемещение валют
+            return true
+        }
+        return false
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        adapter.removeCurrency(position) // Удаление валюты из списка
+        val position = viewHolder.bindingAdapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            adapter.removeCurrency(position) // Удаление валюты из списка
+        }
     }
 }

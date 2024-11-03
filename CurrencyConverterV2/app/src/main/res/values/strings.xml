@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CurrencyConverterV2</string>
+    <string name="currency_flag_description">Currency flag</string>
+    <string name="select_currencies">Выберите валюты</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Отмена</string>
 </resources>
