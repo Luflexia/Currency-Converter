@@ -11,7 +11,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun setScreenOrientation() {
-        if (!isTablet()) {
+        if (!isTablet() && !isFinishing && !isDestroyed) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
     }

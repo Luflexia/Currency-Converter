@@ -48,24 +48,31 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private fun loadUsers() {
+private fun loadUsers() {
+    try {
         val file = File(filesDir, "users.json")
         if (!file.exists()) {
-            // Если файл не существует, создаем пустой JSON
             usersJson = JSONObject("{'users':[]}")
             saveUsers()
         } else {
-            // Чтение файла
             val inputStream = FileInputStream(file)
             val json = inputStream.bufferedReader().use { it.readText() }
             usersJson = JSONObject(json)
         }
+    } catch (e: Exception) {
+        Toast.makeText(this, "Ошибка загрузки пользователей: ${e.message}", Toast.LENGTH_LONG).show()
+        usersJson = JSONObject("{'users':[]}")
     }
+}
 
-    private fun saveUsers() {
+private fun saveUsers() {
+    try {
         val file = File(filesDir, "users.json")
         FileOutputStream(file).use { it.write(usersJson.toString().toByteArray()) }
+    } catch (e: Exception) {
+        Toast.makeText(this, "Ошибка сохранения пользователей: ${e.message}", Toast.LENGTH_LONG).show()
     }
+}
 
     private fun validateUser(username: String, password: String): Boolean {
         val usersArray = usersJson.getJSONArray("users")

@@ -42,9 +42,11 @@ class CurrencyAdapter(
         val previousWatcher = holder.amountInput.getTag(R.id.currencyAmountWatcher) as? TextWatcher
         previousWatcher?.let { holder.amountInput.removeTextChangedListener(it) }
 
-        // Форматируем и устанавливаем текущее значение
+        // Форматируем и устанавливаем текущее значение только если оно изменилось
         val formattedValue = formatAmountForDisplay(currency.convertedValue)
-        holder.amountInput.setText(formattedValue)
+        if (holder.amountInput.text.toString() != formattedValue) {
+            holder.amountInput.setText(formattedValue)
+        }
 
         val watcher = object : TextWatcher {
             private var isUpdating = false
@@ -116,9 +118,13 @@ class CurrencyAdapter(
                 inputAmount / inputRate * currency.rate
             else
                 inputAmount
-            currency.convertedValue = convertedAmount
+
+            // Обновляем только если значение действительно изменилось
+            if (currency.convertedValue != convertedAmount) {
+                currency.convertedValue = convertedAmount
+                notifyItemChanged(currencies.indexOf(currency), currency)
+            }
         }
-        notifyItemRangeChanged(0, currencies.size)
     }
 
     fun moveCurrency(fromPosition: Int, toPosition: Int) {
@@ -151,5 +157,15 @@ private fun setFlag(imageView: ImageView, currencyCode: String) {
     }
     imageView.setImageResource(resourceId)
 }
-
+    override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int, payloads: List<Any>) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+        } else {
+            val currency = payloads[0] as Currency
+            val formattedValue = formatAmountForDisplay(currency.convertedValue)
+            if (holder.amountInput.text.toString() != formattedValue) {
+                holder.amountInput.setText(formattedValue)
+            }
+        }
+    }
 }

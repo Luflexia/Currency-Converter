@@ -6,33 +6,47 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currencyconverterv2.adapters.BankAdapter
 import com.example.currencyconverterv2.databinding.ActivityBankSelectionBinding
 import com.example.currencyconverterv2.models.Bank
+import com.example.currencyconverterv2.utils.ApiService
 
 class BankSelectionActivity : BaseActivity() {
 
     private lateinit var binding: ActivityBankSelectionBinding
     private lateinit var bankAdapter: BankAdapter
-    private var banks: MutableList<Bank> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Инициализация View Binding
         binding = ActivityBankSelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        banks.add(Bank("National Bank", "NBRB"))
-        banks.add(Bank("Bank ABC", "ABC"))
-        banks.add(Bank("Bank XYZ", "XYZ"))
+        setupToolbar()
+        setupRecyclerView()
+    }
 
-        bankAdapter = BankAdapter(banks) { selectedBank ->
-            // Обработка выбора банка
-            val intent = Intent()
-            intent.putExtra("selectedBank", selectedBank.name)
-            setResult(RESULT_OK, intent)
-            finish()
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
         }
+    }
 
-        binding.bankRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.bankRecyclerView.adapter = bankAdapter
+    private fun setupRecyclerView() {
+        bankAdapter = BankAdapter(ApiService.banks) { selectedBank ->
+            onBankSelected(selectedBank)
+        }
+        binding.bankRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@BankSelectionActivity)
+            adapter = bankAdapter
+        }
+    }
+
+    private fun onBankSelected(selectedBank: Bank) {
+        val intent = Intent().apply {
+            putExtra("selectedBankCode", selectedBank.code)
+            putExtra("selectedBankName", selectedBank.name)
+        }
+        setResult(RESULT_OK, intent)
+        finish()
     }
 }
