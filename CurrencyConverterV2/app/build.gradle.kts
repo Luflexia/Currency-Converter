@@ -17,10 +17,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    viewBinding {
-        enable = true
-    }
-
     buildFeatures {
         viewBinding = true
     }
@@ -40,6 +36,14 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    // Добавляем поддержку CMake
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.31.0"
+        }
     }
 }
 

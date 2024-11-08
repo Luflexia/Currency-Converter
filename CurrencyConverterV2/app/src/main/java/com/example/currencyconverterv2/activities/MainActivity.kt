@@ -1,22 +1,25 @@
 package com.example.currencyconverterv2.activities
 
 import android.content.Intent
-import android.content.pm.ActivityInfo // Add this import
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.currencyconverterv2.R
 import com.example.currencyconverterv2.adapters.CurrencyAdapter
 import com.example.currencyconverterv2.databinding.ActivityMainBinding
 import com.example.currencyconverterv2.models.Currency
 import com.example.currencyconverterv2.utils.ApiService
+import com.example.currencyconverterv2.utils.CurrencyGestureHelper
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.ItemTouchHelper
-import com.example.currencyconverterv2.R
-import com.example.currencyconverterv2.utils.CurrencyGestureHelper
 import kotlinx.coroutines.launch
-import android.widget.Toast
+import java.io.File
 
 class MainActivity : BaseActivity() {
 
@@ -26,6 +29,8 @@ class MainActivity : BaseActivity() {
     private var selectedCurrencies: MutableList<Currency> = mutableListOf()
     private val apiService = ApiService()
     private var selectedBankCode: String = "NBRB" // Default bank code
+    private var selectedBankName: String = "Национальный банк" // Default bank name
+    private lateinit var currentUsername: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +38,21 @@ class MainActivity : BaseActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Ставим альбомную ориентацию экрана, если устройство планшет,если нет, то портретную ориентацию.
+        // Получаем имя пользователя из SharedPreferences
+        val sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE)
+        currentUsername = sharedPreferences.getString("CURRENT_USER", "") ?: ""
+
+        if (currentUsername.isEmpty()) {
+            // Если имя пользователя не найдено, возвращаемся к экрану входа
+            Toast.makeText(this, "Пожалуйста, войдите в систему", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
+        Toast.makeText(this, "Добро пожаловать, $currentUsername", Toast.LENGTH_LONG).show()
+
+        // Set screen orientation based on device type
         if (resources.getBoolean(R.bool.is_tablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         } else {
@@ -52,17 +71,30 @@ class MainActivity : BaseActivity() {
 
         loadExchangeRates(selectedBankCode)
 
+        // Перенесен вызов loadSelectedCurrencies() сюда
+        loadSelectedCurrencies()
+
         binding.addCurrencyButton.setOnClickListener {
             showCurrencySelectionDialog()
         }
 
         binding.logoutButton.setOnClickListener {
-            logout()
+            saveSelectedCurrencies()
+            getSharedPreferences("LoginPrefs", MODE_PRIVATE).edit().remove("CURRENT_USER").apply()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
 
         binding.selectBankButton.setOnClickListener {
             selectBank()
         }
+
+        updateBankDisplay()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveSelectedCurrencies()
     }
 
     private fun loadExchangeRates(bankCode: String) {
@@ -75,12 +107,9 @@ class MainActivity : BaseActivity() {
                 for (rate in exchangeRates) {
                     val currency = Currency(rate.curAbbreviation, rate.rate)
                     currencies.add(currency)
-
-                    if (currency.name in listOf("BYN", "USD", "EUR", "RUB")) {
-                        selectedCurrencies.add(currency)
-                    }
                 }
                 runOnUiThread {
+                    loadSelectedCurrencies()
                     currencyAdapter.notifyDataSetChanged()
                 }
             } catch (e: Exception) {
@@ -102,15 +131,15 @@ class MainActivity : BaseActivity() {
         if (requestCode == REQUEST_CODE_SELECT_BANK && resultCode == RESULT_OK) {
             data?.let {
                 selectedBankCode = it.getStringExtra("selectedBankCode") ?: "NBRB"
+                selectedBankName = it.getStringExtra("selectedBankName") ?: "Национальный банк"
                 loadExchangeRates(selectedBankCode)
+                updateBankDisplay()
             }
         }
     }
 
-    private fun logout() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
+    private fun updateBankDisplay() {
+        binding.selectedBankName.text = selectedBankName
     }
 
     private fun updateCurrencies(inputCurrency: String, inputAmount: Double) {
@@ -136,6 +165,7 @@ class MainActivity : BaseActivity() {
             }
             .setPositiveButton("OK") { dialog, _ ->
                 currencyAdapter.notifyDataSetChanged()
+                saveSelectedCurrencies()
                 dialog.dismiss()
             }
             .show()
@@ -150,10 +180,52 @@ class MainActivity : BaseActivity() {
 
     private fun removeCurrency(currency: Currency) {
         selectedCurrencies.remove(currency)
-        updateCurrencies(currency.name, 0.0)
+    }
+
+    private fun loadSelectedCurrencies() {
+        try {
+            val file = File(filesDir, "${currentUsername}_selected_currencies.json")
+            if (file.exists()) {
+                val json = file.readText()
+                val type = object : TypeToken<List<String>>() {}.type
+                val selectedCurrencyNames = Gson().fromJson<List<String>>(json, type)
+
+                selectedCurrencies.clear()
+
+                for (name in selectedCurrencyNames) {
+                    currencies.find { it.name == name }?.let {
+                        selectedCurrencies.add(it)
+                    }
+                }
+
+                if (selectedCurrencies.isEmpty()) {
+                    val defaultCurrencies = listOf("BYN", "USD", "EUR", "RUB")
+                    for (name in defaultCurrencies) {
+                        currencies.find { it.name == name }?.let {
+                            selectedCurrencies.add(it)
+                        }
+                    }
+                }
+
+                currencyAdapter.notifyDataSetChanged()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Ошибка при загрузке валют: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun saveSelectedCurrencies() {
+        try {
+            val selectedCurrencyNames = selectedCurrencies.map { it.name }
+            val json = Gson().toJson(selectedCurrencyNames)
+            val file = File(filesDir, "${currentUsername}_selected_currencies.json")
+            file.writeText(json)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Ошибка при сохранении валют: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     companion object {
-        private const val REQUEST_CODE_SELECT_BANK = 1
+        const val REQUEST_CODE_SELECT_BANK = 1001
     }
 }
